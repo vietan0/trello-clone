@@ -10,6 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mantine/core": "^6.0.18",
+    "@mantine/form": "^6.0.18",
+    "@mantine/hooks": "^6.0.18",
+    "@mui/icons-material": "^5.14.3",
+    "@supabase/supabase-js": "^2.32.0",
+    "@tanstack/router": "^0.0.1-beta.139",
+    "@tanstack/router-devtools": "^0.0.1-beta.139",
+    "@types/node": "^20.4.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
