@@ -4,7 +4,7 @@ import { RouterProvider, Router, Route, RootRoute, redirect } from '@tanstack/ro
 import './index.css';
 import LandingPage from './routes/LandingPage.tsx';
 import App from './App.tsx';
-import Auth from './routes/Auth.tsx';
+import SignIn from './routes/SignIn.tsx';
 import User from './routes/User.tsx';
 import NotFound from './routes/NotFound.tsx';
 import Boards from './routes/Boards.tsx';
@@ -12,6 +12,7 @@ import Board from './routes/Board.tsx';
 import ThemeProvider from './context/ThemeProvider.tsx';
 import CurrentUserProvider from './context/CurrentUserProvider.tsx';
 import supabase from './supabase/index.ts';
+import SignUp from './routes/SignUp.tsx';
 
 // Create a root route
 const rootRoute = new RootRoute({
@@ -31,10 +32,16 @@ const indexRoute = new Route({
   component: LandingPage,
 });
 
-const authRoute = new Route({
+const signInRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: '/auth',
-  component: Auth,
+  path: '/signin',
+  component: SignIn,
+});
+
+const signUpRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/signup',
+  component: SignUp,
 });
 
 const userRoute = new Route({
@@ -47,7 +54,7 @@ const userRoute = new Route({
     if (!user) {
       // /u/$userId and all child routes will redirect if not logged in
       throw redirect({
-        to: '/auth',
+        to: '/signin',
         search: {
           redirect: router.state.location.href,
         },
@@ -84,7 +91,7 @@ const boardRoute = new Route({
     if (!user) {
       // /b/$boardId and all child routes will redirect if not logged in
       throw redirect({
-        to: '/auth',
+        to: '/signin',
         search: {
           redirect: router.state.location.href,
         },
@@ -102,7 +109,8 @@ const notFoundRoute = new Route({
 // Create the route tree using your routes
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  authRoute,
+  signInRoute,
+  signUpRoute,
   userRoute.addChildren([userIndexRoute, boardsRoute.addChildren([boardsIndexRoute, boardRoute])]),
   notFoundRoute,
 ]);

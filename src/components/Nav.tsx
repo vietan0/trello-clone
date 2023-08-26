@@ -27,7 +27,7 @@ export default function Nav() {
           </button>
         </div>
       ) : (
-        <Link to="/auth">Sign In</Link>
+        <Link to="/signin">Sign In</Link>
       )}
     </nav>
   );
