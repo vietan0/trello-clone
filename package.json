@@ -1,5 +1,5 @@
 {
-  "name": "trello-clone",
+  "name": "thello",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,18 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@mantine/core": "^6.0.18",
-    "@mantine/form": "^6.0.18",
-    "@mantine/hooks": "^6.0.18",
     "@mui/icons-material": "^5.14.3",
     "@supabase/supabase-js": "^2.32.0",
     "@tanstack/router": "^0.0.1-beta.139",
     "@tanstack/router-devtools": "^0.0.1-beta.139",
     "@types/node": "^20.4.8",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-nice-avatar": "^1.4.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
@@ -34,6 +30,8 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "postcss": "^8.4.27",
+    "prettier": "^3.0.2",
+    "prettier-plugin-tailwindcss": "^0.5.3",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"

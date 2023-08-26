@@ -1,19 +1,21 @@
 import { useContext } from 'react';
 import { Link, useNavigate } from '@tanstack/router';
-import logoSmall from '../assets/Logo-small.svg';
+import Avatar, { genConfig } from 'react-nice-avatar';
 import { CurrentUserContext } from '../context/CurrentUserProvider';
 import supabase from '../supabase';
+import Logo from './Logo';
 
 export default function Nav() {
   const currentUser = useContext(CurrentUserContext);
   const navigate = useNavigate();
+  const config = genConfig(currentUser?.id); 
 
   return (
     <nav className="flex justify-between">
-      <img src={logoSmall} />
-      Nav
+      <Logo />
       {currentUser ? (
         <div>
+          <Avatar className="w-9 h-9" {...config} />
           <p>{currentUser.email}</p>
           <button
             onClick={async () => {

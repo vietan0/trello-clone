@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
 
-type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark';
 type Option = 'light' | 'dark' | 'os';
 type SetOption = React.Dispatch<React.SetStateAction<Option>>;
 type ThemeContext = {
@@ -36,15 +36,15 @@ export default function ThemeProvider({ children }: { children: JSX.Element }) {
   useEffect(() => {
     function localStorageChange() {
       const themeInLocal = localStorage.getItem('theme');
+      const rootClasses = document.documentElement.classList;
       if (themeInLocal) {
-        if (themeInLocal === 'dark') document.documentElement.classList.add('dark');
-        else document.documentElement.classList.remove('dark');
+        if (themeInLocal === 'dark') rootClasses.add('dark');
+        else rootClasses.remove('dark');
       } else {
         // no localStorage settings -> use system's settings
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches)
-          document.documentElement.classList.add('dark');
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) rootClasses.add('dark');
       }
-      setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+      setTheme(rootClasses.contains('dark') ? 'dark' : 'light');
     }
 
     // manually call once because listener hasn't been added yet
