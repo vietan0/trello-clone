@@ -1,4 +1,6 @@
-import { Link, Outlet } from '@tanstack/router';
+import { Outlet } from '@tanstack/router';
+import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 export default function App() {
   return (
@@ -7,6 +9,7 @@ export default function App() {
         <Outlet />
       </div>
       {/* <TanStackRouterDevtools /> */}
+      <ReactQueryDevtools />
     </>
   );
 }

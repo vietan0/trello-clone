@@ -8,6 +8,7 @@ export const CurrentUserContext = createContext(null as User | null);
 export default function CurrentUserProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState(null as User | null);
   const navigate = useNavigate();
+
   useEffect(() => {
     (async function retrieve() {
       const { data, error } = await supabase.auth.getSession();
@@ -16,13 +17,13 @@ export default function CurrentUserProvider({ children }: { children: React.Reac
 
     supabase.auth.onAuthStateChange((event, session) => {
       if (event == 'SIGNED_IN') {
-        console.log('SIGNED_IN', session);
+        // console.log('SIGNED_IN', session);
         const { user } = session!;
         setCurrentUser(user);
         navigate({ to: `/u/${user.id}/boards` });
       }
       if (event == 'SIGNED_OUT') {
-        console.log('SIGNED_OUT', session);
+        // console.log('SIGNED_OUT', session);
         setCurrentUser(null);
         navigate({ to: '/' });
       }

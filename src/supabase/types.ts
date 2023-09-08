@@ -1,12 +1,15 @@
-export type Background = 'red' | 'yellow' | 'green' | 'blue' | null;
+export type Background = 'red' | 'yellow' | 'green' | 'blue' | '';
 
 export interface BoardPayload {
   name: string;
-  private?: boolean;
-  background?: Background;
+  private: boolean;
+  background: Background;
 }
 
-export interface Board extends BoardPayload {
+export interface Board {
+  name: string;
+  private: boolean;
+  background: Background;
   board_id: string;
   created_at: string;
 }

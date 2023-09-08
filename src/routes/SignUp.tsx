@@ -1,11 +1,13 @@
-import { useEffect } from 'react';
 import Auth from '@/components/Auth';
+import { Helmet } from 'react-helmet-async';
 
 export default function SignUp() {
-  useEffect(() => {
-    // This will run when the page first loads and whenever the title changes
-    document.title = 'Sign Up - Thullo';
-  }, []);
-
-  return <Auth type="signup" />;
+  return (
+    <>
+      <Helmet>
+        <title>Sign Up - Thullo</title>
+      </Helmet>
+      <Auth type="signup" />;
+    </>
+  );
 }

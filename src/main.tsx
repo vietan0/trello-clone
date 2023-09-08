@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, Router, Route, RootRoute, redirect } from '@tanstack/router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { HelmetProvider } from 'react-helmet-async';
 import './index.css';
 import LandingPage from './routes/LandingPage.tsx';
 import App from './App.tsx';
@@ -14,14 +16,28 @@ import CurrentUserProvider from './context/CurrentUserProvider.tsx';
 import supabase from './supabase/index.ts';
 import SignUp from './routes/SignUp.tsx';
 
+import './supabase/rpcTest.ts';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
 // Create a root route
 const rootRoute = new RootRoute({
   component: () => (
-    <ThemeProvider>
-      <CurrentUserProvider>
-        <App />
-      </CurrentUserProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <CurrentUserProvider>
+          <HelmetProvider>
+            <App />
+          </HelmetProvider>
+        </CurrentUserProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   ),
 });
 

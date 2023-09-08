@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from 'react';
 
 export type Theme = 'light' | 'dark';
-type Option = 'light' | 'dark' | 'os';
+type Option = 'light' | 'dark' | 'system';
 type SetOption = React.Dispatch<React.SetStateAction<Option>>;
 type ThemeContext = {
   theme: Theme;
@@ -11,7 +11,7 @@ type ThemeContext = {
 
 export const ThemeContext = createContext<ThemeContext>({
   theme: 'light',
-  option: 'os',
+  option: 'system',
   setOption: null as unknown as SetOption,
 });
 
@@ -21,14 +21,14 @@ export default function ThemeProvider({ children }: { children: JSX.Element }) {
     // must check localStorage before init theme
     if (localStorage.getItem('theme') === 'light') return 'light';
     if (localStorage.getItem('theme') === 'dark') return 'dark';
-    else return 'os';
+    else return 'system';
   });
 
   // state to localStorage
   useEffect(() => {
     if (option === 'light') localStorage.setItem('theme', 'light');
     if (option === 'dark') localStorage.setItem('theme', 'dark');
-    if (option === 'os') localStorage.removeItem('theme');
+    if (option === 'system') localStorage.removeItem('theme');
     window.dispatchEvent(new Event('storage'));
   }, [option]);
 
