@@ -4,6 +4,8 @@ import { RouterProvider, Router, Route, RootRoute, redirect } from '@tanstack/ro
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HelmetProvider } from 'react-helmet-async';
 import './index.css';
+import ThemeProvider from './context/ThemeProvider.tsx';
+import CurrentUserProvider from './context/CurrentUserProvider.tsx';
 import LandingPage from './routes/LandingPage.tsx';
 import App from './App.tsx';
 import SignIn from './routes/SignIn.tsx';
@@ -11,10 +13,9 @@ import User from './routes/User.tsx';
 import NotFound from './routes/NotFound.tsx';
 import Boards from './routes/Boards.tsx';
 import Board from './routes/Board.tsx';
-import ThemeProvider from './context/ThemeProvider.tsx';
-import CurrentUserProvider from './context/CurrentUserProvider.tsx';
 import supabase from './supabase/index.ts';
 import SignUp from './routes/SignUp.tsx';
+import { getBoardById } from './supabase/boards.ts';
 
 import './supabase/rpcTest.ts';
 
@@ -114,6 +115,10 @@ const boardRoute = new Route({
       });
     }
   },
+  loader: async ({ params: { boardId } }) => {
+    const board = await getBoardById(boardId);
+    return board;
+  }
 });
 
 const notFoundRoute = new Route({
@@ -127,7 +132,8 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   signInRoute,
   signUpRoute,
-  userRoute.addChildren([userIndexRoute, boardsRoute.addChildren([boardsIndexRoute, boardRoute])]),
+  userRoute.addChildren([userIndexRoute, boardsRoute.addChildren([boardsIndexRoute])]),
+  boardRoute,
   notFoundRoute,
 ]);
 // Create the router using your route tree

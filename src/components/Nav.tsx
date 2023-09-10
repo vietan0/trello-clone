@@ -20,7 +20,7 @@ import { CurrentUserContext } from '../context/CurrentUserProvider';
 import supabase from '../supabase';
 import Logo from './Logo';
 
-export default function Nav() {
+export default function Nav({ boardName }: { boardName?: string }) {
   const currentUser = useContext(CurrentUserContext);
   const { option, setOption } = useContext(ThemeContext);
   const navigate = useNavigate();
@@ -28,9 +28,15 @@ export default function Nav() {
 
   return (
     <nav className="flex justify-between items-center px-4 py-3">
-      <Link to="/">
-        <Logo />
-      </Link>
+      <div id="left" className="flex gap-8 items-center">
+        <Link to="/">
+          <Logo />
+        </Link>
+        <Link to="/u/$userId/boards" params={{ userId: currentUser?.id as string }}>
+          All Boards
+        </Link>
+        <p>{boardName}</p>
+      </div>
       <div id="right" className="flex items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

@@ -13,10 +13,20 @@ async function getAllBoards(user_id: string) {
   return data;
 }
 
+async function getBoardById(board_id: string) {
+  const { data: board, error } = await supabase
+    .from('boards')
+    .select('*')
+    // Filters
+    .eq('board_id', board_id);
+  if (error) throw error;
+  return board;
+}
+
 async function deleteBoard(board_id: string) {
   const { data, error } = await supabase.from('boards').delete().eq('board_id', board_id).select();
   if (error) throw error;
   return data;
 }
 
-export { createBoard, getAllBoards, deleteBoard };
+export { createBoard, getAllBoards, getBoardById, deleteBoard };

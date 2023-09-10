@@ -10,6 +10,7 @@ import { Board } from '@/supabase/types';
 import { Button } from './ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteBoard } from '@/supabase/boards';
+import { Link } from '@tanstack/router';
 
 export default function BoardCard({ board }: { board: Board }) {
   const queryClient = useQueryClient();
@@ -26,24 +27,32 @@ export default function BoardCard({ board }: { board: Board }) {
   }
 
   return (
-    <Card className="max-w-xs" style={{ backgroundColor: board.background || 'inherit' }}>
-      <CardHeader>
-        <CardTitle>{board.name}</CardTitle>
-        <CardDescription>{board.created_at}</CardDescription>
-      </CardHeader>
-      <CardContent></CardContent>
-      <CardFooter className="flex flex-col gap-2 items-start">
-        <p>Private: {board.private.toString()}</p>
-        <Button variant="destructive" onClick={onClick}>
-          Delete Board
-        </Button>
-        {deleteBoardMutation.isError ? (
-          <p className="text-red-500 text-sm">
-            An error occurred:{' '}
-            {deleteBoardMutation.error instanceof Error && deleteBoardMutation.error.message}
-          </p>
-        ) : null}
-      </CardFooter>
-    </Card>
+    <Link
+      to="/b/$boardId"
+      params={{
+        boardId: board.board_id,
+      }}
+      className="text-blue-500 hover:underline"
+    >
+      <Card className="max-w-xs" style={{ backgroundColor: board.background || 'inherit' }}>
+        <CardHeader>
+          <CardTitle>{board.name}</CardTitle>
+          <CardDescription>{board.created_at}</CardDescription>
+        </CardHeader>
+        <CardContent></CardContent>
+        <CardFooter className="flex flex-col gap-2 items-start">
+          <p>Private: {board.private.toString()}</p>
+          <Button variant="destructive" onClick={onClick}>
+            Delete Board
+          </Button>
+          {deleteBoardMutation.isError ? (
+            <p className="text-red-500 text-sm">
+              An error occurred:{' '}
+              {deleteBoardMutation.error instanceof Error && deleteBoardMutation.error.message}
+            </p>
+          ) : null}
+        </CardFooter>
+      </Card>
+    </Link>
   );
 }

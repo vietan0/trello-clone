@@ -7,7 +7,6 @@ import { createBoard, getAllBoards } from '@/supabase/boards';
 import { Board, BoardPayload } from '@/supabase/types';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { getUser } from '@/supabase/user';
 import {
   Form,
   FormControl,
@@ -25,12 +24,19 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
+import supabase from '@/supabase';
 
 export default function Boards() {
   const queryClient = useQueryClient();
   const { data: user } = useQuery({
     queryKey: ['getUser'],
-    queryFn: getUser,
+    queryFn: async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      // if error
+      return user;
+    },
   });
   const userId = user?.id;
 
@@ -100,6 +106,7 @@ export default function Boards() {
                     <Switch
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      className="block"
                     />
                   </FormControl>
                   <FormMessage />
