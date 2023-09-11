@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { Link, useNavigate } from '@tanstack/router';
 import Avatar, { genConfig } from 'react-nice-avatar';
 import {
   DropdownMenu,
@@ -19,6 +18,7 @@ import { ThemeContext } from '../context/ThemeProvider';
 import { CurrentUserContext } from '../context/CurrentUserProvider';
 import supabase from '../supabase';
 import Logo from './Logo';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Nav({ boardName }: { boardName?: string }) {
   const currentUser = useContext(CurrentUserContext);
@@ -32,9 +32,7 @@ export default function Nav({ boardName }: { boardName?: string }) {
         <Link to="/">
           <Logo />
         </Link>
-        <Link to="/u/$userId/boards" params={{ userId: currentUser?.id as string }}>
-          All Boards
-        </Link>
+        {currentUser && <Link to={`/u/${currentUser?.id}/boards`}>All Boards</Link>}
         <p>{boardName}</p>
       </div>
       <div id="right" className="flex items-center gap-2">
@@ -76,13 +74,16 @@ export default function Nav({ boardName }: { boardName?: string }) {
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 className="cursor-pointer"
-                onClick={() => {
-                  navigate({ to: `/u/${currentUser?.id}/boards` });
-                }}
+                onClick={() => navigate(`/u/${currentUser?.id}/boards`)}
               >
                 Boards
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">Profile</DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => navigate(`/u/${currentUser?.id}`)}
+              >
+                Profile
+              </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer">Billing</DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer">Team</DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer">Subscription</DropdownMenuItem>
@@ -90,7 +91,7 @@ export default function Nav({ boardName }: { boardName?: string }) {
                 className="cursor-pointer"
                 onClick={async () => {
                   const { error } = await supabase.auth.signOut();
-                  if (error === null) navigate({ to: '/' });
+                  // if (error === null) navigate('/');
                 }}
               >
                 Sign Out

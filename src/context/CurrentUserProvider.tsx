@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { useNavigate } from '@tanstack/router';
+import { useNavigate } from 'react-router-dom';
 import { User } from '@supabase/supabase-js';
 import supabase from '../supabase';
 
@@ -20,12 +20,12 @@ export default function CurrentUserProvider({ children }: { children: React.Reac
         // console.log('SIGNED_IN', session);
         const { user } = session!;
         setCurrentUser(user);
-        navigate({ to: `/u/${user.id}/boards` });
+        navigate(`/u/${user.id}/boards`);
       }
       if (event == 'SIGNED_OUT') {
         // console.log('SIGNED_OUT', session);
         setCurrentUser(null);
-        navigate({ to: '/' });
+        navigate('/');
       }
     });
   }, [navigate]);

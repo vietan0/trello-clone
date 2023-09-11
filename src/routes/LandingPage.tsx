@@ -7,7 +7,6 @@ export default function LandingPage() {
       <Helmet>
         <title>Thullo - Landing Page</title>
       </Helmet>
-      <Nav />
       <h1 className="text-xl">Landing Page</h1>
     </>
   );

@@ -10,7 +10,7 @@ import { Board } from '@/supabase/types';
 import { Button } from './ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteBoard } from '@/supabase/boards';
-import { Link } from '@tanstack/router';
+import { Link } from 'react-router-dom';
 
 export default function BoardCard({ board }: { board: Board }) {
   const queryClient = useQueryClient();
@@ -27,13 +27,7 @@ export default function BoardCard({ board }: { board: Board }) {
   }
 
   return (
-    <Link
-      to="/b/$boardId"
-      params={{
-        boardId: board.board_id,
-      }}
-      className="text-blue-500 hover:underline"
-    >
+    <Link to={`/b/${board.board_id}`} className="text-blue-500 hover:underline">
       <Card className="max-w-xs" style={{ backgroundColor: board.background || 'inherit' }}>
         <CardHeader>
           <CardTitle>{board.name}</CardTitle>

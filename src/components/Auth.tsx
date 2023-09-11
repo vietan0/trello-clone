@@ -1,5 +1,4 @@
 import * as z from 'zod';
-import { Link } from '@tanstack/router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -58,9 +57,9 @@ export default function Auth({ type }: Props) {
     <div className="min-h-screen flex flex-col justify-center">
       <Card className="max-w-sm w-full self-stretch mx-auto xs:outline outline-1 outline-neutral-300 dark:outline-neutral-800">
         <CardHeader className="flex flex-row items-center gap-4">
-          <Link to="/">
+          {/* <Link to="/">
             <Logo short />
-          </Link>
+          </Link> */}
           <CardTitle>{type === 'signin' ? 'Welcome to Thullo!' : 'Create an account'}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
@@ -127,7 +126,7 @@ export default function Auth({ type }: Props) {
               <div className="flex justify-between items-center mt-4">
                 <p className="text-xs">
                   {type === 'signin' ? "Don't have an account?" : 'Already have an account?'}{' '}
-                  {type === 'signin' ? (
+                  {/* {type === 'signin' ? (
                     <Link to="/signup" className="text-blue-500 hover:underline">
                       Sign Up
                     </Link>
@@ -135,7 +134,7 @@ export default function Auth({ type }: Props) {
                     <Link to="/signin" className="text-blue-500 hover:underline">
                       Sign In
                     </Link>
-                  )}
+                  )} */}
                 </p>
                 <Button type="submit" variant="secondary">
                   {type === 'signin' ? 'Sign In' : 'Sign Up'}

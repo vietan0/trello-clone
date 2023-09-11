@@ -6,4 +6,5 @@
   - [x] if logged out, redirects to `/`
 - [x] supabase auth
 - [x] dynamic page title (Helmet)
+- [ ] protected routes (`react-router`)
 - [ ] database design
