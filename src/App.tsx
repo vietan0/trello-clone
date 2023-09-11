@@ -7,6 +7,7 @@ import User from './routes/User';
 import Boards from './routes/Boards';
 import Board from './routes/Board';
 import NavLayout from './components/NavLayout';
+import NotFound from './routes/NotFound';
 
 export default function App() {
   return (
@@ -18,10 +19,10 @@ export default function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/" element={<NavLayout />}>
             <Route index element={<LandingPage />} />
-            {/* if 2 routes don't have shared UI, you shouldn't nest just to avoid route repeating */}
             <Route path="u/:userId" element={<User />} />
             <Route path="u/:userId/boards" element={<Boards />} />
             <Route path="b/:boardId" element={<Board />} />
+            {/* <Route path="*" element={<NotFound />} /> */}
           </Route>
         </Routes>
       </div>

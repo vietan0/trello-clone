@@ -1,5 +1,4 @@
 import { Board as TBoard } from '@/supabase/types';
-import Nav from '../components/Nav';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { getBoardById } from '@/supabase/boards';

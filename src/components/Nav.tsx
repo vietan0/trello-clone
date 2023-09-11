@@ -34,6 +34,7 @@ export default function Nav({ boardName }: { boardName?: string }) {
         </Link>
         {currentUser && <Link to={`/u/${currentUser?.id}/boards`}>All Boards</Link>}
         <p>{boardName}</p>
+        <Link to="/about">About</Link>
       </div>
       <div id="right" className="flex items-center gap-2">
         <DropdownMenu>

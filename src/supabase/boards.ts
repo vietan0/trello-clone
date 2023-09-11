@@ -8,12 +8,14 @@ async function createBoard(payload: BoardPayload) {
 }
 
 async function getAllBoards(user_id: string) {
+  console.count('getAllBoards');
   const { data, error } = await supabase.rpc('get_all_boards', { user_id });
   if (error) throw error;
   return data;
 }
 
 async function getBoardById(board_id: string) {
+  console.count('getBoardById');
   const { data: board, error } = await supabase
     .from('boards')
     .select('*')

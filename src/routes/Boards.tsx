@@ -1,7 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import Nav from '../components/Nav';
 import BoardCard from '@/components/BoardCard';
 import { createBoard, getAllBoards } from '@/supabase/boards';
 import { Board, BoardPayload } from '@/supabase/types';
