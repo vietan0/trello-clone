@@ -11,22 +11,23 @@ import LandingPage from './routes/LandingPage';
 import User from './routes/User';
 import Boards from './routes/Boards';
 import Board from './routes/Board';
-import NavLayout from './components/NavLayout';
+import NavLayout from './routes/NavLayout';
 import NotFound from './routes/NotFound';
+import AuthLayout from './routes/AuthLayout';
 
-{
-  /* auth routes won't have the shared <Nav /> */
-}
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
+      {/* auth routes won't have the shared <Nav /> */}
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/" element={<NavLayout />}>
         <Route index element={<LandingPage />} />
-        <Route path="u/:userId" element={<User />} />
-        <Route path="u/:userId/boards" element={<Boards />} />
-        <Route path="b/:boardId" element={<Board />} />
+        <Route element={<AuthLayout />}>
+          <Route path="u/:userId" element={<User />} />
+          <Route path="u/:userId/boards" element={<Boards />} />
+          <Route path="b/:boardId" element={<Board />} />
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Route>
     </>,

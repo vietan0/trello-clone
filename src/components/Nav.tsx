@@ -19,9 +19,11 @@ import useCurrentUser from '@/hooks/useCurrentUser';
 import supabase from '../supabase';
 import Logo from './Logo';
 import { Link, useNavigate } from 'react-router-dom';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 
 export default function Nav({ boardName }: { boardName?: string }) {
   const currentUser = useCurrentUser();
+  const queryClient = useQueryClient();
   const { option, setOption } = useContext(ThemeContext);
   const navigate = useNavigate();
   const config = genConfig(currentUser?.id);
@@ -92,7 +94,10 @@ export default function Nav({ boardName }: { boardName?: string }) {
                 className="cursor-pointer"
                 onClick={async () => {
                   const { error } = await supabase.auth.signOut();
-                  if (error === null) navigate('/');
+                  if (error === null) {
+                    queryClient.invalidateQueries({ queryKey: ['getUser'] });
+                    navigate('/');
+                  }
                 }}
               >
                 Sign Out

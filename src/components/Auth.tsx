@@ -39,7 +39,7 @@ export default function Auth({ type }: Props) {
   const currentUser = useCurrentUser();
   const navigate = useNavigate();
   if (currentUser) {
-    navigate(`/u/${currentUser.id}`);
+    navigate(`/u/${currentUser.id}/boards`);
   }
 
   // 1. Define your form.
@@ -55,14 +55,14 @@ export default function Auth({ type }: Props) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (type === 'signin') {
       const { data, error } = await supabase.auth.signInWithPassword(values);
-      if (data) {
-        navigate(`/u/${data.user!.id}`);
+      if (data.user) {
+        navigate(`/u/${data.user.id}/boards`);
       }
     }
     if (type === 'signup') {
       const { data, error } = await supabase.auth.signUp(values);
-      if (data) {
-        navigate(`/u/${data.user!.id}`);
+      if (data.user) {
+        navigate(`/u/${data.user.id}/boards`);
       }
     }
   }
@@ -86,7 +86,7 @@ export default function Auth({ type }: Props) {
                   password: import.meta.env.VITE_DEMO_PASSWORD_1,
                 });
                 if (data) {
-                  navigate(`/u/${data.user!.id}`);
+                  navigate(`/u/${data.user!.id}/boards`);
                 }
               }}
             >
