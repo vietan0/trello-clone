@@ -23,21 +23,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import supabase from '@/supabase';
+import useCurrentUser from '@/hooks/useCurrentUser';
 
 export default function Boards() {
   const queryClient = useQueryClient();
-  const { data: user } = useQuery({
-    queryKey: ['getUser'],
-    queryFn: async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      // if error
-      return user;
-    },
-  });
-  const userId = user?.id;
+  const currentUser = useCurrentUser();
+  const userId = currentUser?.id;
 
   const {
     data: boards,
@@ -76,10 +67,7 @@ export default function Boards() {
       <h1 className="text-2xl tracking-tight">All Boards</h1>
       <Form {...form}>
         <h1>Create Board Form</h1>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-2 max-w-xs mb-6"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2 max-w-xs mb-6">
           <FormField
             control={form.control}
             name="name"

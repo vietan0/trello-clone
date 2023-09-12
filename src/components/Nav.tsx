@@ -15,13 +15,13 @@ import Brightness6Icon from '@mui/icons-material/Brightness6';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import ModeNightIcon from '@mui/icons-material/ModeNight';
 import { ThemeContext } from '../context/ThemeProvider';
-import { CurrentUserContext } from '../context/CurrentUserProvider';
+import useCurrentUser from '@/hooks/useCurrentUser';
 import supabase from '../supabase';
 import Logo from './Logo';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function Nav({ boardName }: { boardName?: string }) {
-  const currentUser = useContext(CurrentUserContext);
+  const currentUser = useCurrentUser();
   const { option, setOption } = useContext(ThemeContext);
   const navigate = useNavigate();
   const config = genConfig(currentUser?.id);
@@ -92,7 +92,7 @@ export default function Nav({ boardName }: { boardName?: string }) {
                 className="cursor-pointer"
                 onClick={async () => {
                   const { error } = await supabase.auth.signOut();
-                  // if (error === null) navigate('/');
+                  if (error === null) navigate('/');
                 }}
               >
                 Sign Out

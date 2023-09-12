@@ -22,6 +22,8 @@ import { Button } from '@/components/ui/button';
 import Logo from '../components/Logo';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import supabase from '@/supabase';
+import { Link, useNavigate } from 'react-router-dom';
+import useCurrentUser from '@/hooks/useCurrentUser';
 
 type Props = { type: 'signin' | 'signup' };
 const formSchema = z.object({
@@ -34,6 +36,12 @@ const formSchema = z.object({
 });
 
 export default function Auth({ type }: Props) {
+  const currentUser = useCurrentUser();
+  const navigate = useNavigate();
+  if (currentUser) {
+    navigate(`/u/${currentUser.id}`);
+  }
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,9 +55,15 @@ export default function Auth({ type }: Props) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (type === 'signin') {
       const { data, error } = await supabase.auth.signInWithPassword(values);
+      if (data) {
+        navigate(`/u/${data.user!.id}`);
+      }
     }
     if (type === 'signup') {
       const { data, error } = await supabase.auth.signUp(values);
+      if (data) {
+        navigate(`/u/${data.user!.id}`);
+      }
     }
   }
 
@@ -57,9 +71,9 @@ export default function Auth({ type }: Props) {
     <div className="min-h-screen flex flex-col justify-center">
       <Card className="max-w-sm w-full self-stretch mx-auto xs:outline outline-1 outline-neutral-300 dark:outline-neutral-800">
         <CardHeader className="flex flex-row items-center gap-4">
-          {/* <Link to="/">
+          <Link to="/">
             <Logo short />
-          </Link> */}
+          </Link>
           <CardTitle>{type === 'signin' ? 'Welcome to Thullo!' : 'Create an account'}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
@@ -71,6 +85,9 @@ export default function Auth({ type }: Props) {
                   email: import.meta.env.VITE_DEMO_EMAIL_1,
                   password: import.meta.env.VITE_DEMO_PASSWORD_1,
                 });
+                if (data) {
+                  navigate(`/u/${data.user!.id}`);
+                }
               }}
             >
               Demo Account
@@ -126,7 +143,7 @@ export default function Auth({ type }: Props) {
               <div className="flex justify-between items-center mt-4">
                 <p className="text-xs">
                   {type === 'signin' ? "Don't have an account?" : 'Already have an account?'}{' '}
-                  {/* {type === 'signin' ? (
+                  {type === 'signin' ? (
                     <Link to="/signup" className="text-blue-500 hover:underline">
                       Sign Up
                     </Link>
@@ -134,7 +151,7 @@ export default function Auth({ type }: Props) {
                     <Link to="/signin" className="text-blue-500 hover:underline">
                       Sign In
                     </Link>
-                  )} */}
+                  )}
                 </p>
                 <Button type="submit" variant="secondary">
                   {type === 'signin' ? 'Sign In' : 'Sign Up'}
