@@ -28,7 +28,7 @@ import useCurrentUser from '@/hooks/useCurrentUser';
 export default function Boards() {
   const queryClient = useQueryClient();
   const currentUser = useCurrentUser();
-  const userId = currentUser?.id;
+  const userId = currentUser?.id as string;
 
   const {
     data: boards,
@@ -36,7 +36,7 @@ export default function Boards() {
     error,
   } = useQuery({
     queryKey: ['getAllBoards', userId],
-    queryFn: () => getAllBoards(userId as string),
+    queryFn: () => getAllBoards(userId),
     enabled: !!userId, // query won't execute until userId exists
   });
 
