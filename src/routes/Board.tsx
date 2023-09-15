@@ -15,7 +15,6 @@ import {
   SortableContext,
   horizontalListSortingStrategy,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { getBoardById } from '@/supabase/boards';
 import { Helmet } from 'react-helmet-async';
@@ -25,7 +24,6 @@ import { ListPayload, List } from '@/supabase/types';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -33,6 +31,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import ListCard from '@/components/ListCard';
+import { useState } from 'react';
 
 export default function Board() {
   const queryClient = useQueryClient();
@@ -52,6 +51,7 @@ export default function Board() {
     queryKey: ['getAllLists', boardId],
     queryFn: () => getAllLists(boardId),
   });
+  const [random, setRandom] = useState(0);
 
   const sortedLists = unsortedLists?.sort((a, b) => a.rank.localeCompare(b.rank)) as List[]; // questionable
   const highestRank =
@@ -84,6 +84,7 @@ export default function Board() {
           const targetList = oldQueryData[targetIndex];
           const updatedList = { ...targetList, rank: newRank };
           oldQueryData.splice(targetIndex, 1, updatedList);
+          setRandom(Math.random());
           return oldQueryData;
         }
       });
@@ -130,40 +131,44 @@ export default function Board() {
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
-    const activeId = active.id as string;
-    const overId = over!.id as string;
+    if (over) {
+      const activeId = active.id as string;
+      const overId = over!.id as string;
+      // console.log('active', active);
+      // console.log('over', over);
 
-    if (activeId !== overId) {
-      // this block determines newRank
-      const dragDirection = activeId.localeCompare(overId) > 0 ? 'back' : 'away';
+      if (activeId !== overId) {
+        // this block determines newRank
+        const dragDirection = activeId.localeCompare(overId) > 0 ? 'back' : 'away';
 
-      const activeIndex = sortedLists.findIndex((list) => list.rank === activeId);
-      const activeList = sortedLists[activeIndex];
+        const activeIndex = sortedLists.findIndex((list) => list.rank === activeId);
+        const activeList = sortedLists[activeIndex];
 
-      const overIndex = sortedLists.findIndex((list) => list.rank === overId);
-      const overRank = LexoRank.parse(overId);
-      let newRank;
-      if (dragDirection === 'back') {
-        const overPrev = sortedLists[overIndex - 1];
-        if (!overPrev) {
-          // over is beginning of array
-          newRank = overRank.genPrev().toString();
+        const overIndex = sortedLists.findIndex((list) => list.rank === overId);
+        const overRank = LexoRank.parse(overId);
+        let newRank;
+        if (dragDirection === 'back') {
+          const overPrev = sortedLists[overIndex - 1];
+          if (!overPrev) {
+            // over is beginning of array
+            newRank = overRank.genPrev().toString();
+          } else {
+            const overPrevRank = LexoRank.parse(overPrev.rank);
+            newRank = overPrevRank.between(overRank).toString();
+          }
         } else {
-          const overPrevRank = LexoRank.parse(overPrev.rank);
-          newRank = overPrevRank.between(overRank).toString();
+          const overNext = sortedLists[overIndex + 1];
+          if (!overNext) {
+            // over is end of array
+            newRank = overRank.genNext().toString();
+          } else {
+            const overNextRank = LexoRank.parse(overNext.rank);
+            newRank = overRank.between(overNextRank).toString();
+          }
         }
-      } else {
-        const overNext = sortedLists[overIndex + 1];
-        if (!overNext) {
-          // over is end of array
-          newRank = overRank.genNext().toString();
-        } else {
-          const overNextRank = LexoRank.parse(overNext.rank);
-          newRank = overRank.between(overNextRank).toString();
-        }
+
+        updateRankMutation.mutate({ newRank, list_id: activeList.list_id });
       }
-
-      updateRankMutation.mutate({ newRank, list_id: activeList.list_id });
     }
   }
 
@@ -201,7 +206,6 @@ export default function Board() {
       ) : unsortedLists ? (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext
-            // no callback props, handled in <DndContext>
             items={sortedLists!.map((list) => list.rank)} // declare identifier as `rank` instead of default `id`
             strategy={horizontalListSortingStrategy}
           >

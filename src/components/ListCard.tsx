@@ -16,8 +16,6 @@ import { useParams } from 'react-router-dom';
 export default function ListCard({ list }: { list: List }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: list.rank,
-    animateLayoutChanges: () => false,
-    
   });
 
   const style = {
