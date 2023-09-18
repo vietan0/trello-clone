@@ -13,13 +13,21 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteList } from '@/supabase/lists';
 import { useParams } from 'react-router-dom';
 
-export default function ListCard({ list }: { list: List }) {
+export default function ListCard({
+  list,
+  active,
+  overlay,
+}: {
+  list: List;
+  active: boolean;
+  overlay?: boolean;
+}) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: list.rank,
   });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition,
   };
 
@@ -35,20 +43,32 @@ export default function ListCard({ list }: { list: List }) {
   });
 
   return (
-    <Card className="w-72" ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <CardHeader>
-        <CardTitle>{list.name}</CardTitle>
-        <CardDescription>{list.rank}</CardDescription>
-      </CardHeader>
-      <CardContent></CardContent>
-      <CardFooter className="flex flex-col gap-2 items-start">
-        {deleteListMutation.isError ? (
-          <p className="text-red-500 text-sm">
-            An error occurred:{' '}
-            {deleteListMutation.error instanceof Error && deleteListMutation.error.message}
-          </p>
-        ) : null}
-      </CardFooter>
+    <Card
+      className="w-72"
+      ref={setNodeRef}
+      style={{ ...style, rotate: active && overlay ? '4deg' : '0deg' }}
+      {...attributes}
+      {...listeners}
+    >
+      {active && !overlay ? (
+        <div className="ghost bg-neutral-900 w-full h-full" />
+      ) : (
+        <>
+          <CardHeader>
+            <CardTitle>{list.name}</CardTitle>
+            <CardDescription>{list.rank}</CardDescription>
+          </CardHeader>
+          <CardContent></CardContent>
+          <CardFooter className="flex flex-col gap-2 items-start">
+            {deleteListMutation.isError ? (
+              <p className="text-red-500 text-sm">
+                An error occurred:{' '}
+                {deleteListMutation.error instanceof Error && deleteListMutation.error.message}
+              </p>
+            ) : null}
+          </CardFooter>
+        </>
+      )}
     </Card>
   );
 }

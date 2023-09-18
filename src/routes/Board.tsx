@@ -10,6 +10,8 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
+  DragStartEvent,
+  DragOverlay,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -129,6 +131,12 @@ export default function Board() {
     }),
   );
 
+  const [activeId, setActiveId] = useState('');
+  function handleDragStart(event: DragStartEvent) {
+    const { active } = event;
+    setActiveId(active.id as string);
+  }
+
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (over) {
@@ -170,6 +178,7 @@ export default function Board() {
         updateRankMutation.mutate({ newRank, list_id: activeList.list_id });
       }
     }
+    setActiveId('');
   }
 
   return isLoading ? (
@@ -204,7 +213,12 @@ export default function Board() {
       {listsIsLoading ? (
         'Fetching lists...'
       ) : unsortedLists ? (
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
           <SortableContext
             items={sortedLists!.map((list) => list.rank)} // declare identifier as `rank` instead of default `id`
             strategy={horizontalListSortingStrategy}
@@ -213,13 +227,24 @@ export default function Board() {
               {listsIsLoading ? (
                 'Fetching lists...'
               ) : sortedLists ? (
-                sortedLists.map((list: List) => <ListCard key={list.rank} list={list} />)
+                sortedLists.map((list: List) => (
+                  <ListCard key={list.rank} list={list} active={activeId === list.rank} />
+                ))
               ) : (
                 <>
                   <h1>There's been an error while fetching boards</h1>
                   <Button>Retry</Button>
                 </>
               )}
+              <DragOverlay dropAnimation={null}>
+                {activeId && (
+                  <ListCard
+                    list={sortedLists.find((list) => list.rank === activeId) as List}
+                    active={true}
+                    overlay={true}
+                  />
+                )}
+              </DragOverlay>
             </div>
           </SortableContext>
         </DndContext>
