@@ -13,15 +13,22 @@
 - [x] add lists with lexorank drag-n-drop
   - [x] add `list` schema on `supabase`
   - [x] write policies: ALL: auth & board members only
-  - create `CreateListForm` in `Board`
+  - [x] create `CreateListForm` in `Board`
   - [x] render with a `<List />` component
   - [x] add optimistic update
   - [ ] create 4 default lists (in JAVASCRIPT because I need `lexorank`) when creating a new board
 - [ ] database design
 - [x] fix: janky animation when dragging lists (solve before making cards / checklists / checklist items...) [GitHub issue](https://github.com/clauderic/dnd-kit/issues/921)
 - [x] (optional) add `DragOverlay` when dragging
+- [x] separate `drag` event from `click` event (`activationConstraint.distance`)
 - [ ] cards
-  - [ ] `supabase` table, triggers, queries & mutations
-  - [ ] `<Card />` (draggable) 
+  - [x] `supabase`:
+    - [x] table
+    - [x] queries
+    - [x] `Add Card` form inside a `List`
+    - [x] mutations
+    - [x] write policies
+  - [x] `<Card />` UI
+  - [ ] handle dragging across lists
   - [ ] routing (`/c/:cardId`)
 

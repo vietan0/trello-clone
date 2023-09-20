@@ -1,11 +1,12 @@
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { LexoRank } from 'lexorank';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 import {
   DndContext,
   closestCenter,
-  KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
@@ -16,10 +17,8 @@ import {
 import {
   SortableContext,
   horizontalListSortingStrategy,
-  sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
 import { getBoardById } from '@/supabase/boards';
-import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
 import { createList, getAllLists, updateRank } from '@/supabase/lists';
 import { ListPayload, List } from '@/supabase/types';
@@ -33,7 +32,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import ListCard from '@/components/ListCard';
-import { useState } from 'react';
 
 export default function Board() {
   const queryClient = useQueryClient();
@@ -125,9 +123,12 @@ export default function Board() {
   };
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+        // drag event only fired if mouse is dragging 8px away from initial position
+        // --> allow room for click events
+      },
     }),
   );
 
