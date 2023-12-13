@@ -20,7 +20,7 @@ import {
 import { getBoardById } from '@/supabase/boards';
 import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
-import { createList, getAllLists, updateRank } from '@/supabase/lists';
+import { createList, getAllListsOfBoard, updateRank } from '@/supabase/lists';
 import { ListPayload, List } from '@/supabase/types';
 import {
   Form,
@@ -49,8 +49,8 @@ export default function Board() {
     isLoading: listsIsLoading,
     error: listsError,
   } = useQuery({
-    queryKey: ['getAllLists', boardId],
-    queryFn: () => getAllLists(boardId),
+    queryKey: ['getAllListsOfBoard', boardId],
+    queryFn: () => getAllListsOfBoard(boardId),
   });
 
   const sortedLists = unsortedLists?.sort((a, b) => a.rank.localeCompare(b.rank)) as List[]; // questionable
@@ -60,45 +60,48 @@ export default function Board() {
   const createListMutation = useMutation({
     mutationFn: (payload: ListPayload) => createList(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['getAllLists', boardId] });
+      queryClient.invalidateQueries({ queryKey: ['getAllListsOfBoard', boardId] });
     },
   });
 
-  const updateRankMutation = useMutation({
+  const updateListRankMutation = useMutation({
     mutationFn: ({ newRank, list_id }: { newRank: string; list_id: string }) =>
       updateRank({ newRank, list_id }),
     onMutate: async ({ newRank, list_id }) => {
       // Optimistic Update logic is in onMutate - run before mutation function
       // 1. Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['getAllLists', boardId] });
+      await queryClient.cancelQueries({ queryKey: ['getAllListsOfBoard', boardId] });
 
       // 2. Get data before update (to rollback/revert if fail)
-      const prevLists = queryClient.getQueryData<List[]>(['getAllLists', boardId]);
+      const prevLists = queryClient.getQueryData<List[]>(['getAllListsOfBoard', boardId]);
 
       // 3. Update query's local, cached data
-      queryClient.setQueryData(['getAllLists', boardId], (oldQueryData: List[] | undefined) => {
-        // find target list and change it
-        if (!oldQueryData) return;
-        else {
-          const targetIndex = oldQueryData.findIndex((list) => list.list_id === list_id);
-          const targetList = oldQueryData[targetIndex];
-          const updatedList = { ...targetList, rank: newRank };
-          oldQueryData.splice(targetIndex, 1, updatedList);
-          return oldQueryData;
-        }
-      });
+      queryClient.setQueryData(
+        ['getAllListsOfBoard', boardId],
+        (oldQueryData: List[] | undefined) => {
+          // find target list and change it
+          if (!oldQueryData) return;
+          else {
+            const targetIndex = oldQueryData.findIndex((list) => list.list_id === list_id);
+            const targetList = oldQueryData[targetIndex];
+            const updatedList = { ...targetList, rank: newRank };
+            oldQueryData.splice(targetIndex, 1, updatedList);
+            return oldQueryData;
+          }
+        },
+      );
 
       return { prevLists };
     },
     // If the mutation fails, use the context we returned above
     onError: (_err, _variables, context) => {
       if (context?.prevLists) {
-        queryClient.setQueryData(['getAllLists', boardId], context.prevLists);
+        queryClient.setQueryData(['getAllListsOfBoard', boardId], context.prevLists);
       }
     },
     // Always refetch after error or success:
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['getAllLists', boardId] });
+      queryClient.invalidateQueries({ queryKey: ['getAllListsOfBoard', boardId] });
     },
   });
 
@@ -163,9 +166,11 @@ export default function Board() {
         }
       }
 
-      updateRankMutation.mutate({ newRank, list_id: activeList.list_id });
+      updateListRankMutation.mutate({ newRank, list_id: activeList.list_id });
     }
   }
+
+  // Card query code
 
   return isLoading ? (
     'Getting board data...'

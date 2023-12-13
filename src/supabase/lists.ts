@@ -7,7 +7,7 @@ async function createList(payload: ListPayload) {
   return data as List[];
 }
 
-async function getAllLists(board_id: string) {
+async function getAllListsOfBoard(board_id: string) {
   const { data, error } = await supabase.from('lists').select('*').eq('board_id', board_id);
   // if (error) throw error;
   return data as List[];
@@ -34,4 +34,4 @@ async function deleteList(list_id: string) {
   return data as List[];
 }
 
-export { createList, getAllLists, getListById, updateRank, deleteList };
+export { createList, getAllListsOfBoard, getListById, updateRank, deleteList };

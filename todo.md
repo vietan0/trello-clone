@@ -18,4 +18,16 @@
   - [x] add optimistic update
   - [ ] fix that bug: janky animation when dragging lists
   - [ ] create 4 default lists (in JAVASCRIPT because I need `lexorank`) when creating a new board
-- [ ] database design
+- dnd:
+  - [ ] bring card query to `<Board>`
+    - [ ] save multiple rows into a variable - plpgsql
+    - [ ] write `getAllCardsOfBoard` RPC function
+  - [ ] a state `items`: 
+   - every item that can be dragged (both `Card`s and `List`s)
+   - update on `dragover` and `dragend`
+  - [ ] function `findContainer`:
+  ```js
+    // a draggable item can be Card or List
+    draggedId === 'B2' => return 'B'
+    draggedId === 'B' => return 'B'
+  ```

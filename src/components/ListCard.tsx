@@ -17,7 +17,6 @@ export default function ListCard({ list }: { list: List }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: list.rank,
     animateLayoutChanges: () => false,
-    
   });
 
   const style = {
@@ -32,7 +31,7 @@ export default function ListCard({ list }: { list: List }) {
   const deleteListMutation = useMutation({
     mutationFn: (list_id: string) => deleteList(list_id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['getAllLists', boardId] });
+      queryClient.invalidateQueries({ queryKey: ['getAllListsOfBoard', boardId] });
     },
   });
 

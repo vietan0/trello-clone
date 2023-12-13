@@ -27,3 +27,15 @@ export interface List extends ListPayload {
   list_id: string;
   created_at: string;
 }
+
+export interface CardPayload {
+  list_id: string;
+  title: string;
+  content: string;
+  rank: string;
+}
+
+export interface Card extends CardPayload {
+  card_id: string;
+  created_at: string;
+}
